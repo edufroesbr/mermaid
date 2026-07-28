@@ -47,6 +47,39 @@ disponível como `subagent_type: consultor-tributario`.
 > não são versionadas — reinstale a partir de `tributario/` quando trocar de
 > máquina/ambiente.
 
+### Instaladores prontos
+
+A partir de um clone deste repositório:
+
+```bash
+# Linux/macOS — instala em ~/.claude (ou passe outra pasta)
+bash tributario/install.sh
+bash tributario/install.sh /caminho/para/.claude
+```
+
+```powershell
+# Windows (PowerShell) — por padrão instala no LexFlow do Antigravity IDE
+powershell -ExecutionPolicy Bypass -File tributario\install.ps1
+powershell -ExecutionPolicy Bypass -File tributario\install.ps1 -ClaudeDir "D:\outro\.claude"
+```
+
+### Instalar no LexFlow (Windows) sem clonar o repo
+
+Cola no PowerShell — clona a branch num temporário, copia para o `.claude` do
+LexFlow e limpa:
+
+```powershell
+$Lex = "C:\Users\edufr\.gemini\antigravity-ide\scratch\Lex_Flow\.claude"
+$tmp = Join-Path $env:TEMP "mermaid-trib"
+if (Test-Path $tmp) { Remove-Item -Recurse -Force $tmp }
+git clone --depth 1 -b claude/tax-norms-specialized-agent-a5i7ay https://github.com/edufroesbr/mermaid.git $tmp
+New-Item -ItemType Directory -Force -Path "$Lex\skills","$Lex\agents" | Out-Null
+Copy-Item -Recurse -Force "$tmp\tributario\skills\consulta-normas-tributarias" "$Lex\skills\"
+Copy-Item -Force "$tmp\tributario\agents\consultor-tributario.md" "$Lex\agents\"
+Remove-Item -Recurse -Force $tmp
+Write-Host "OK: skill + agente instalados em $Lex"
+```
+
 ## Uso do script
 
 ```bash
